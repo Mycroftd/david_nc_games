@@ -7,6 +7,8 @@ require('dotenv').config({
 
 if (!process.env.PGDATABASE) {
   throw new Error('PGDATABASE not set');
+}else{
+  console.log(`Connected to ${process.env.NODE_ENV}`);
 }
 
 module.exports = new Pool();
