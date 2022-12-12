@@ -7,7 +7,15 @@ exports.selectAllCategories = () => {
 };
 
 exports.selectAllReviews = () => {
-  return db.query("SELECT * FROM reviews ORDER BY created_at DESC;").then((reviews) => {
-    return reviews.rows;
-  });
+  return db
+    .query(
+      `
+  SELECT reviews.*,
+  (SELECT CAST(COUNT(*) as INTEGER) AS comment_count FROM comments 
+  WHERE reviews.review_id =  comments.review_id)
+  FROM reviews ORDER BY created_at DESC;`
+    )
+    .then((reviews) => {
+      return  reviews.rows ;
+    });
 };
