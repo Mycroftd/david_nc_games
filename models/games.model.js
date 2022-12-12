@@ -7,7 +7,7 @@ exports.selectAllCategories = () => {
 };
 
 exports.selectAllReviews = () => {
-  return db.query("SELECT * FROM reviews;").then((reviews) => {
+  return db.query("SELECT * FROM reviews ORDER BY created_at DESC;").then((reviews) => {
     return reviews.rows;
   });
 };
