@@ -36,3 +36,26 @@ describe("/api/categories", () => {
       });
   });
 });
+
+describe("/api/reviews", () =>{
+    test("status 200, returns all reviews", () =>{
+        return request(app)
+        .get("/api/reviews")
+        .expect(200)
+        .then(({body}) =>{
+            expect(body.reviews.length).toBe(13);
+            body.reviews.forEach((reviews) => {
+                expect(reviews).toMatchObject({
+                    review_id: expect.any(Number),
+                    title: expect.any(String),
+                    designer: expect.any(String),
+                    review_img_url: expect.any(String),
+                    review_body: expect.any(String),
+                    category: expect.any(String),
+                    created_at:expect.any(String),
+                    votes: expect.any(Number),
+                });
+              });
+        })
+    })
+})
