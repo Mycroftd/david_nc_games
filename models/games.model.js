@@ -5,3 +5,7 @@
         return categories.rows;
    })
  } 
+
+ exports.selectReviewById = () =>{
+    
+ }

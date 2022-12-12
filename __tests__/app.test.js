@@ -36,3 +36,14 @@ describe("/api/categories", () => {
       });
   });
 });
+
+describe("/api/reviews/:review_id", () => {
+    test("status 200, returns the correct review", ()=>{
+        return request(app)
+        .get ("/api/reviews/4")
+        .expect(200)
+        .then(()=>{
+
+        })
+    })
+})
