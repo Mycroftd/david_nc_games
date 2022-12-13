@@ -100,7 +100,7 @@ describe("/api/reviews", () =>{
     })
 })
 
-describe("/api/reviews/:review_id/comments", () =>{
+describe("POST /api/reviews/:review_id/comments", () =>{
   test("status 201, when a valid review id and username is given", () =>{
     return request(app)
     .post("/api/reviews/4/comments")
@@ -120,21 +120,52 @@ describe("/api/reviews/:review_id/comments", () =>{
       })
     })
   })
-  test("status 400 if username is invalid", () =>{
+  test("status 201, when a valid review id and username is given but should ignore any extra properties", () =>{
     return request(app)
     .post("/api/reviews/4/comments")
     .send({
-      username: "banana",
-      body: "comment review"
+      username: "mallionaire",
+      body: "comment review",
+      author: "Dave"
+    })
+    .expect(201)
+    .then(({body}) =>{
+      expect(body.comment).toMatchObject({
+        comment_id: 7,
+        body: 'comment review',
+        review_id: 4,
+        author: 'mallionaire',
+        votes: 0,
+        created_at: expect.any(String)
+      })
+    })
+  })
+  test("status 400 if body doesn't contain username or body", () =>{
+    return request(app)
+    .post("/api/reviews/4/comments")
+    .send({
+
     })
     .expect(400)
     .then(({body}) =>{
       expect(body.msg).toBe("bad request");
     })
   })
+  test("status 404 if username doesn't exist", () =>{
+    return request(app)
+    .post("/api/reviews/4/comments")
+    .send({
+      username: "banana",
+      body: "comment review"
+    })
+    .expect(404)
+    .then(({body}) =>{
+      expect(body.msg).toBe("review does not exist");
+    })
+  })
   test("status 400 if review id is invalid", () =>{
     return request(app)
-    .post("/api/reviews/100/comments")
+    .post("/api/reviews/20/comments")
     .send({
       username: "mallionaire",
       body: "comment review"

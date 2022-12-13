@@ -47,3 +47,17 @@ exports.insertComment = (username,body,reviewId) =>{
     return review.rows[0]
   })
 }
+
+exports.selectUserNameById = (userName) =>{
+  return db.query('SELECT * FROM users WHERE username = $1', [userName])
+  .then(user =>{
+    if(user.rowCount === 0){
+      return Promise.reject({
+        status: 404,
+        msg: "review does not exist",
+      })     
+    }
+    else return true;
+    
+  })
+}
