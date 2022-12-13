@@ -9,7 +9,7 @@ exports.getAllCategories = (req, res, next) => {
   });
 };
 
-exports.getAllReviews = (req, res, next) => {
+exports.getAllReviews = (req,res, next) => {
   selectAllReviews().then((reviews) => {
     console.log(reviews);
     res.status(200).send({ reviews });
