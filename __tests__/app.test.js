@@ -37,7 +37,7 @@ describe("/api/categories", () => {
   });
 });
 
-describe.only("/api/reviews/:review_id", () => {
+describe("/api/reviews/:review_id", () => {
     test("status 200, returns the correct review", ()=>{
         return request(app)
         .get ("/api/reviews/4")
