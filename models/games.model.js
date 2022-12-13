@@ -35,6 +35,22 @@ exports.selectAllReviews = () => {
     });
 };
 
-exports.selectreviewComment = () =>{
-
-}
+exports.selectreviewComment = (reviewId) => {
+  return db
+    .query(
+      `SELECT * FROM comments WHERE review_id = $1
+                ORDER BY created_at ASC`,
+      [reviewId]
+    )
+    .then((reviews) => {
+      if(reviews.rows.length === 0){
+        return Promise.reject({
+          status: 404,
+          msg: "not found",
+        });
+      }
+      else{
+        return reviews.rows;
+      }      
+    });
+};

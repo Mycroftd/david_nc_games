@@ -2,6 +2,7 @@ const {
   selectAllCategories,
   selectReviewById,
   selectAllReviews,
+  selectreviewComment
 } = require("../models/games.model");
 
 exports.getAllCategories = (req, res, next) => {
@@ -28,7 +29,11 @@ exports.getAllReviews = (req,res, next) => {
   });
 }
 
-
 exports.getAllreviewComment = (req,res,next) =>{
-  
+  const reviewId = req.params.review_id;
+  selectreviewComment(reviewId).then((comments) => {
+    res.status(200).send({comments});
+  }).catch((err) =>{
+    next(err);
+  })
 }
