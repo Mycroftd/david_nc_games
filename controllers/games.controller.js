@@ -2,6 +2,7 @@ const {
   selectAllCategories,
   selectReviewById,
   selectAllReviews,
+  selectreviewComment
 } = require("../models/games.model");
 
 exports.getAllCategories = (req, res, next) => {
@@ -20,10 +21,20 @@ exports.getReviewById = (req, res, next) => {
     .catch((err) => {
       next(err);
     });
-=======
+  }
+
 exports.getAllReviews = (req,res, next) => {
   selectAllReviews().then((reviews) => {
     res.status(200).send({ reviews });
   });
+}
 
-};
+exports.getAllreviewComment = (req,res,next) =>{
+  const reviewId = req.params.review_id;
+  Promise.all([selectreviewComment(reviewId), selectReviewById(reviewId)])
+  .then(([comments]) => { 
+    res.status(200).send({comments});
+  }).catch((err) =>{
+    next(err);
+  })
+}
