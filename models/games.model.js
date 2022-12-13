@@ -38,3 +38,12 @@ exports.selectAllReviews = () => {
 exports.selectreviewComment = () =>{
 
 }
+
+exports.insertComment = (username,body,reviewId) =>{
+  return db.query(`
+    INSERT INTO comments (body,review_id,author,votes,created_at)
+    VALUES ($1,$2,$3,0,current_timestamp) RETURNING *;
+  `,[body,reviewId,username]).then((review) =>{
+    return review.rows[0]
+  })
+}

@@ -99,3 +99,49 @@ describe("/api/reviews", () =>{
         })
     })
 })
+
+describe("/api/reviews/:review_id/comments", () =>{
+  test("status 201, when a valid review id and username is given", () =>{
+    return request(app)
+    .post("/api/reviews/4/comments")
+    .send({
+      username: "mallionaire",
+      body: "comment review"
+    })
+    .expect(201)
+    .then(({body}) =>{
+      expect(body.comment).toMatchObject({
+        comment_id: 7,
+        body: 'comment review',
+        review_id: 4,
+        author: 'mallionaire',
+        votes: 0,
+        created_at: expect.any(String)
+      })
+    })
+  })
+  test("status 400 if username is invalid", () =>{
+    return request(app)
+    .post("/api/reviews/4/comments")
+    .send({
+      username: "banana",
+      body: "comment review"
+    })
+    .expect(400)
+    .then(({body}) =>{
+      expect(body.msg).toBe("bad request");
+    })
+  })
+  test("status 400 if review id is invalid", () =>{
+    return request(app)
+    .post("/api/reviews/100/comments")
+    .send({
+      username: "mallionaire",
+      body: "comment review"
+    })
+    .expect(400)
+    .then(({body}) =>{
+      expect(body.msg).toBe("bad request");
+    })
+  })
+})
