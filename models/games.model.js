@@ -21,12 +21,6 @@ exports.selectReviewById = (reviewId) => {
     });
 };
 
-exports.selectAllCategories = () => {
-  return db.query("SELECT * FROM categories;").then((categories) => {
-    return categories.rows;
-  });
-};
-
 exports.selectAllReviews = () => {
   return db
     .query(
@@ -40,3 +34,7 @@ exports.selectAllReviews = () => {
       return reviews.rows;
     });
 };
+
+exports.selectreviewComment = () =>{
+
+}

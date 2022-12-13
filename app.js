@@ -4,7 +4,8 @@ const app = express();
 const {
   getAllCategories,
   getReviewById,
-  getAllReviews
+  getAllReviews,
+  getAllreviewComment
 } = require("./controllers/games.controller");
 const {
   catch404Error,
@@ -15,8 +16,8 @@ const {
 
 app.get('/api/categories', getAllCategories);
 app.get('/api/reviews', getAllReviews);
-
 app.get("/api/reviews/:review_id", getReviewById);
+app.get("/api/reviews/:review_id/comments",getAllreviewComment);
 
 app.all("*", catch404Error);
 

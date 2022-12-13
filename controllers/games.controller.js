@@ -27,3 +27,8 @@ exports.getAllReviews = (req,res, next) => {
     res.status(200).send({ reviews });
   });
 }
+
+
+exports.getAllreviewComment = (req,res,next) =>{
+  
+}
