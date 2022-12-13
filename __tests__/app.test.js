@@ -101,7 +101,7 @@ describe("/api/reviews", () => {
   });
 });
 
-describe("/api/reviews/:review_id/comments", () => {
+describe.only("/api/reviews/:review_id/comments", () => {
   test("status 200, returns comments with certain review id", () => {
     return request(app)
     .get("/api/reviews/3/comments")
@@ -128,12 +128,20 @@ describe("/api/reviews/:review_id/comments", () => {
       expect(body.msg).toBe("bad request")
     });
   })
-  test("status 404, if valid review but no results", () =>{
+  test("status 200, if valid review but no results", () =>{
     return request(app)
     .get("/api/reviews/5/comments")
-    .expect(404)
+    .expect(200)
     .then(({ body }) => {
-      expect(body.msg).toBe("not found")
+      expect(body.comments).toEqual([])
     });
   });
+  test("status 404, if a valid review but no comment", () =>{
+    return request(app)
+    .get("/api/reviews/9000/comments")
+    .expect(404)
+    .then(({ body }) => {
+      expect(body.msg).toBe("review does not exist");
+    });
+  })
 });
