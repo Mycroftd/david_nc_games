@@ -7,23 +7,25 @@ const {
   getAllReviews,
   getAllreviewComment,
   addComment,
+  getAllUsers
   patchReviewById
 } = require("./controllers/games.controller");
 const {
   catch404Error,
   catch500Error,
   databaseError,
-  customError
+  customError,
 } = require("./controllers/errors.controller");
 
 app.use(express.json());
 
-app.get('/api/categories', getAllCategories);
-app.get('/api/reviews', getAllReviews);
+app.get("/api/categories", getAllCategories);
+app.get("/api/reviews", getAllReviews);
 app.get("/api/reviews/:review_id", getReviewById);
-app.get("/api/reviews/:review_id/comments",getAllreviewComment);
+app.get("/api/reviews/:review_id/comments", getAllreviewComment);
+app.post("/api/reviews/:review_id/comments", addComment);
 
-app.post("/api/reviews/:review_id/comments",addComment)
+app.get("/api/users", getAllUsers);
 
 app.patch("/api/reviews/:review_id", patchReviewById);
 
