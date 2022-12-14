@@ -4,7 +4,8 @@ const {
   selectAllReviews,
   insertComment,
   selectUserNameById,
-  selectreviewComment
+  selectreviewComment,
+  updateReviewsById
 } = require("../models/games.model");
 
 exports.getAllCategories = (req, res, next) => {
@@ -53,6 +54,21 @@ exports.getAllreviewComment = (req,res,next) =>{
   Promise.all([selectreviewComment(reviewId), selectReviewById(reviewId)])
   .then(([comments]) => { 
     res.status(200).send({comments});
+  }).catch((err) =>{
+    next(err);
+  })
+}
+
+
+exports.patchReviewById = (req,res,next) =>{
+  
+  const { inc_votes } = req.body;
+  if(!inc_votes){
+    res.status(400).send({msg: "bad request"});
+  }
+  const reviewId = req.params.review_id;
+  updateReviewsById(inc_votes, reviewId).then(review =>{
+    res.status(200).send({ review });
   }).catch((err) =>{
     next(err);
   })
