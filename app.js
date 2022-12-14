@@ -5,7 +5,8 @@ const {
   getAllCategories,
   getReviewById,
   getAllReviews,
-  getAllreviewComment
+  getAllreviewComment,
+  addComment
 } = require("./controllers/games.controller");
 const {
   catch404Error,
@@ -14,10 +15,14 @@ const {
   customError
 } = require("./controllers/errors.controller");
 
+app.use(express.json());
+
 app.get('/api/categories', getAllCategories);
 app.get('/api/reviews', getAllReviews);
 app.get("/api/reviews/:review_id", getReviewById);
 app.get("/api/reviews/:review_id/comments",getAllreviewComment);
+
+app.post("/api/reviews/:review_id/comments",addComment)
 
 app.all("*", catch404Error);
 
