@@ -35,7 +35,7 @@ exports.selectAllReviews = () => {
     });
 };
 
-exports.selectreviewComment = () =>{
+
 
 }
 
@@ -61,3 +61,18 @@ exports.selectUserNameById = (userName) =>{
     
   })
 }
+
+
+exports.selectreviewComment = (reviewId) => {
+  return db
+    .query(
+      `SELECT * FROM comments WHERE review_id = $1
+                ORDER BY created_at ASC`,
+      [reviewId]
+    )
+    .then(({rows}) => {
+      return rows;
+    });
+
+};
+
