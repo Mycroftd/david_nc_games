@@ -6,6 +6,7 @@ const {
   selectUserNameById,
   selectreviewComment,
   selectAllUsers,
+  updateReviewsById
 } = require("../models/games.model");
 
 exports.getAllCategories = (req, res, next) => {
@@ -66,3 +67,19 @@ exports.getAllUsers = (req, res, next) => {
     next(err);
   });
 };
+
+
+
+exports.patchReviewById = (req,res,next) =>{
+  
+  const { inc_votes } = req.body;
+  if(!inc_votes){
+    res.status(400).send({msg: "bad request"});
+  }
+  const reviewId = req.params.review_id;
+  updateReviewsById(inc_votes, reviewId).then(review =>{
+    res.status(200).send({ review });
+  }).catch((err) =>{
+    next(err);
+  })
+}
