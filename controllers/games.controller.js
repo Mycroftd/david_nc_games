@@ -4,7 +4,8 @@ const {
   selectAllReviews,
   insertComment,
   selectUserNameById,
-  selectreviewComment
+  selectreviewComment,
+  selectAllUsers,
 } = require("../models/games.model");
 
 exports.getAllCategories = (req, res, next) => {
@@ -30,7 +31,6 @@ exports.getAllReviews = (req, res, next) => {
   });
 };
 
-
 exports.addComment = (req, res, next) => {
   const { username, body } = req.body;
   const reviewId = req.params.review_id;
@@ -48,12 +48,21 @@ exports.addComment = (req, res, next) => {
     });
 };
 
-exports.getAllreviewComment = (req,res,next) =>{
+exports.getAllreviewComment = (req, res, next) => {
   const reviewId = req.params.review_id;
   Promise.all([selectreviewComment(reviewId), selectReviewById(reviewId)])
-  .then(([comments]) => { 
-    res.status(200).send({comments});
-  }).catch((err) =>{
+    .then(([comments]) => {
+      res.status(200).send({ comments });
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
+exports.getAllUsers = (req, res, next) => {
+  selectAllUsers().then((users) => {
+    res.status(200).send({ users });
+  }).catch((err) => {
     next(err);
-  })
-}
+  });
+};
