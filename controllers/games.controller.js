@@ -60,15 +60,6 @@ exports.getAllreviewComment = (req, res, next) => {
     });
 };
 
-exports.getAllUsers = (req, res, next) => {
-  selectAllUsers().then((users) => {
-    res.status(200).send({ users });
-  }).catch((err) => {
-    next(err);
-  });
-};
-
-
 
 exports.patchReviewById = (req,res,next) =>{
   
@@ -83,3 +74,11 @@ exports.patchReviewById = (req,res,next) =>{
     next(err);
   })
 }
+
+exports.getAllUsers = (req, res, next) => {
+  selectAllUsers().then((users) => {
+    res.status(200).send({ users });
+  }).catch((err) => {
+    next(err);
+  });
+};

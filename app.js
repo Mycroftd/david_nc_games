@@ -7,7 +7,7 @@ const {
   getAllReviews,
   getAllreviewComment,
   addComment,
-  getAllUsers
+  getAllUsers,
   patchReviewById
 } = require("./controllers/games.controller");
 const {
@@ -24,10 +24,10 @@ app.get("/api/reviews", getAllReviews);
 app.get("/api/reviews/:review_id", getReviewById);
 app.get("/api/reviews/:review_id/comments", getAllreviewComment);
 app.post("/api/reviews/:review_id/comments", addComment);
+app.patch("/api/reviews/:review_id", patchReviewById);
 
 app.get("/api/users", getAllUsers);
 
-app.patch("/api/reviews/:review_id", patchReviewById);
 
 app.all("*", catch404Error);
 
