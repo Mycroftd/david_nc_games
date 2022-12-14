@@ -204,7 +204,7 @@ describe("/api/reviews", () => {
   });
 });
 
-describe.only("/api/reviews/:review_id/comments", () => {
+describe("/api/reviews/:review_id/comments", () => {
   test("status 200, returns comments with certain review id", () => {
     return request(app)
     .get("/api/reviews/3/comments")

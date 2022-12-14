@@ -37,8 +37,6 @@ exports.selectAllReviews = () => {
 
 
 
-}
-
 exports.insertComment = (username,body,reviewId) =>{
   return db.query(`
     INSERT INTO comments (body,review_id,author,votes,created_at)
