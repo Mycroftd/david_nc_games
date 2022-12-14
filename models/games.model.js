@@ -35,31 +35,32 @@ exports.selectAllReviews = () => {
     });
 };
 
-
-
-exports.insertComment = (username,body,reviewId) =>{
-  return db.query(`
+exports.insertComment = (username, body, reviewId) => {
+  return db
+    .query(
+      `
     INSERT INTO comments (body,review_id,author,votes,created_at)
     VALUES ($1,$2,$3,0,current_timestamp) RETURNING *;
-  `,[body,reviewId,username]).then((review) =>{
-    return review.rows[0]
-  })
-}
+  `,
+      [body, reviewId, username]
+    )
+    .then((review) => {
+      return review.rows[0];
+    });
+};
 
-exports.selectUserNameById = (userName) =>{
-  return db.query('SELECT * FROM users WHERE username = $1', [userName])
-  .then(user =>{
-    if(user.rowCount === 0){
-      return Promise.reject({
-        status: 404,
-        msg: "review does not exist",
-      })     
-    }
-    else return true;
-    
-  })
-}
-
+exports.selectUserNameById = (userName) => {
+  return db
+    .query("SELECT * FROM users WHERE username = $1", [userName])
+    .then((user) => {
+      if (user.rowCount === 0) {
+        return Promise.reject({
+          status: 404,
+          msg: "review does not exist",
+        });
+      } else return true;
+    });
+};
 
 exports.selectreviewComment = (reviewId) => {
   return db
@@ -68,9 +69,28 @@ exports.selectreviewComment = (reviewId) => {
                 ORDER BY created_at ASC`,
       [reviewId]
     )
-    .then(({rows}) => {
+    .then(({ rows }) => {
       return rows;
     });
-
 };
 
+exports.updateReviewsById = (inc_votes, reviewId) => {
+  return db
+    .query(
+      `
+    UPDATE reviews SET votes = votes + $1  WHERE review_id = $2
+    RETURNING *;
+  `,
+      [inc_votes, reviewId]
+    )
+    .then(({ rows }) => {
+      if (rows.length === 0) {
+        return Promise.reject({
+          status: 404,
+          msg: "review doesn't exist",
+        });
+      } else {
+        return rows[0];
+      }
+    });
+};
