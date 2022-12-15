@@ -8,6 +8,7 @@ const {
   selectAllUsers,
   updateReviewsById,
   removeComment
+  getCategoryById,
 } = require("../models/games.model");
 
 exports.getAllCategories = (req, res, next) => {
@@ -28,9 +29,45 @@ exports.getReviewById = (req, res, next) => {
 };
 
 exports.getAllReviews = (req, res, next) => {
-  selectAllReviews().then((reviews) => {
-    res.status(200).send({ reviews });
-  });
+  let { category, order, sort_by } = req.query;
+
+  const orderGreenList = ["DESC", "ASC"];
+  if (!order) {
+    order = "DESC";
+  } else if (!orderGreenList.includes(order)) {    
+    res.status(400).send({ msg: "invalid order" });
+    return;
+  }
+
+  const sortByGreenList = [
+    "review_id",
+    "title",
+    "category",
+    "designer",
+    "owner",
+    "review_body",
+    "review_img_url",
+    "created_at",
+    "votes",
+  ];
+  if(!sort_by ){
+    sort_by = "created_at"
+  }
+  else if (!sortByGreenList.includes(sort_by)){
+    res.status(400).send({ msg: "invalid sort by" });
+    return;
+  }
+  const promiseMethods = [selectAllReviews(category, order, sort_by)];
+  if (category) {
+    promiseMethods.push(getCategoryById(category));
+  }
+  Promise.all(promiseMethods)
+    .then(([reviews]) => {
+      res.status(200).send({ reviews });
+    })
+    .catch((err) => {
+      next(err);
+    });
 };
 
 exports.addComment = (req, res, next) => {
@@ -61,20 +98,20 @@ exports.getAllreviewComment = (req, res, next) => {
     });
 };
 
-
-exports.patchReviewById = (req,res,next) =>{
-  
+exports.patchReviewById = (req, res, next) => {
   const { inc_votes } = req.body;
-  if(!inc_votes){
-    res.status(400).send({msg: "bad request"});
+  if (!inc_votes) {
+    res.status(400).send({ msg: "bad request" });
   }
   const reviewId = req.params.review_id;
-  updateReviewsById(inc_votes, reviewId).then(review =>{
-    res.status(200).send({ review });
-  }).catch((err) =>{
-    next(err);
-  })
-}
+  updateReviewsById(inc_votes, reviewId)
+    .then((review) => {
+      res.status(200).send({ review });
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
 
 exports.getAllUsers = (req, res, next) => {
   selectAllUsers().then((users) => {
@@ -94,3 +131,13 @@ exports.deleteComment  =(req,res,next) =>{
   });
   
 }
+
+  selectAllUsers()
+    .then((users) => {
+      res.status(200).send({ users });
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
