@@ -30,15 +30,23 @@ exports.selectReviewById = (reviewId) => {
   );
 };
 
-exports.selectAllReviews = () => {
-  return db
-    .query(
-      `
+exports.selectAllReviews = (category, order, sort_by) => {
+
+  let params = [];
+  let queryString = `
   SELECT reviews.*,
   (SELECT CAST(COUNT(*) as INTEGER) AS comment_count FROM comments 
   WHERE reviews.review_id =  comments.review_id)
-  FROM reviews ORDER BY created_at DESC;`
-    )
+  FROM reviews`
+
+  if(category){
+    queryString += " WHERE category = $1";
+    params.push(category);
+  }
+
+  queryString += ` ORDER BY ${sort_by} ${order};`;
+  return db
+    .query(queryString,params)
     .then((reviews) => {
       return reviews.rows;
     });
@@ -108,4 +116,23 @@ exports.selectAllUsers = () => {
   return db.query("SELECT * FROM users;").then((users) => {
     return users.rows;
   });
+
 };
+
+}
+
+exports.getCategoryById = (categoryId) =>{
+  return db
+    .query("SELECT * FROM categories WHERE slug = $1", [categoryId])
+    .then((category) => {
+      if (category.rows.length === 0) {
+        return Promise.reject({
+          status: 404,
+          msg: "not found",
+        });
+      } else {
+        return true;
+      }
+    });
+}
+
