@@ -135,3 +135,16 @@ exports.getCategoryById = (categoryId) =>{
     });
 }
 
+exports.removeComment = (commentId) =>{
+  return db.query("DELETE FROM comments WHERE comment_id = $1",[commentId])
+  .then(results =>{
+    if(results.rowCount === 0){
+      return Promise.reject({
+        status: 404,
+        msg: "comment doesn't exist",
+      });
+    }
+    return;
+  })
+}
+

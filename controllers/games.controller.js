@@ -7,6 +7,7 @@ const {
   selectreviewComment,
   selectAllUsers,
   updateReviewsById,
+  removeComment,
   getCategoryById,
 } = require("../models/games.model");
 
@@ -113,7 +114,25 @@ exports.patchReviewById = (req, res, next) => {
 };
 
 exports.getAllUsers = (req, res, next) => {
-  selectAllUsers()
+  selectAllUsers().then((users) => {
+    res.status(200).send({ users });
+  }).catch((err) => {
+    next(err);
+  });
+};
+
+
+exports.deleteComment  =(req,res,next) =>{
+  const {comment_id} = req.params;
+  removeComment(comment_id).then(() =>{
+    res.status(204).send({});
+  }).catch((err) => {
+    next(err);
+  });
+  
+}
+
+  exports.selectAllUsers(users) =(req,res,next) =>{
     .then((users) => {
       res.status(200).send({ users });
     })
@@ -121,3 +140,4 @@ exports.getAllUsers = (req, res, next) => {
       next(err);
     });
 };
+
