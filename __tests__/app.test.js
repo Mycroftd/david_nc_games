@@ -348,3 +348,30 @@ describe("GET /api/users", () =>{
       });
   });
 })
+
+describe("DELETE /api/comments/:comment_id", () =>{
+  test("status 204, if deleted and no contents" , () =>{
+    return request(app)
+    .delete( "/api/comments/4")
+    .expect(204)
+    .then(({body}) =>{
+      expect(body).toEqual({});
+    })
+  })
+  test("status 400 if invalid comment id passed", () =>{
+    return request(app)
+    .delete( "/api/comments/banana")
+    .expect(400)
+    .then(({body}) =>{
+      expect(body.msg).toEqual("bad request");
+    });
+  })
+  test("status 404 if valid id but doesn't exist",()=>{
+    return request(app)
+    .delete( "/api/comments/100")
+    .expect(404)
+    .then(({body}) =>{
+      expect(body.msg).toEqual("comment doesn't exist");
+    });
+  })
+})

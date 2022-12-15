@@ -7,18 +7,27 @@ exports.selectAllCategories = () => {
 };
 
 exports.selectReviewById = (reviewId) => {
-  return db
-    .query("SELECT * FROM reviews WHERE  review_id = $1", [reviewId])
-    .then((review) => {
-      if (review.rows.length === 0) {
-        return Promise.reject({
-          status: 404,
-          msg: "review does not exist",
-        });
-      } else {
-        return review.rows[0];
-      }
-    });
+  return (
+    db
+      //.query(`SELECT * FROM reviews WHERE  review_id = $1`, [reviewId])
+      .query(
+        `SELECT reviews.*,
+    (SELECT CAST(COUNT(*) as INTEGER) AS comment_count FROM comments 
+    WHERE reviews.review_id =  comments.review_id)
+    FROM reviews WHERE reviews.review_id = $1`,
+        [reviewId]
+      )
+      .then((review) => {
+        if (review.rows.length === 0) {
+          return Promise.reject({
+            status: 404,
+            msg: "review does not exist",
+          });
+        } else {
+          return review.rows[0];
+        }
+      })
+  );
 };
 
 exports.selectAllReviews = () => {
@@ -95,8 +104,21 @@ exports.updateReviewsById = (inc_votes, reviewId) => {
     });
 };
 
-exports.selectAllUsers = () =>{
+exports.selectAllUsers = () => {
   return db.query("SELECT * FROM users;").then((users) => {
     return users.rows;
   });
+};
+
+exports.removeComment = (commentId) =>{
+  return db.query("DELETE FROM comments WHERE comment_id = $1",[commentId])
+  .then(results =>{
+    if(results.rowCount === 0){
+      return Promise.reject({
+        status: 404,
+        msg: "comment doesn't exist",
+      });
+    }
+    return;
+  })
 }

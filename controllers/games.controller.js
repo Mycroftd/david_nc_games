@@ -6,7 +6,8 @@ const {
   selectUserNameById,
   selectreviewComment,
   selectAllUsers,
-  updateReviewsById
+  updateReviewsById,
+  removeComment
 } = require("../models/games.model");
 
 exports.getAllCategories = (req, res, next) => {
@@ -82,3 +83,14 @@ exports.getAllUsers = (req, res, next) => {
     next(err);
   });
 };
+
+
+exports.deleteComment  =(req,res,next) =>{
+  const {comment_id} = req.params;
+  removeComment(comment_id).then(() =>{
+    res.status(204).send({});
+  }).catch((err) => {
+    next(err);
+  });
+  
+}
