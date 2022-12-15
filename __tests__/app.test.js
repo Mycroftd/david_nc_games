@@ -1,5 +1,6 @@
 const app = require("../app.js");
 const request = require("supertest");
+const jestSorted = require("jest-sorted");
 
 const db = require("../db/connection.js");
 const seed = require("../db/seeds/seed");
@@ -246,7 +247,6 @@ describe("/api/reviews/:review_id/comments", () => {
   });
 });
 
-
 describe("PATCH /api/reviews/:review_id", () => {
   test("status 200 updates the votes by the correct amount", () => {
     return request(app)
@@ -296,9 +296,7 @@ describe("PATCH /api/reviews/:review_id", () => {
   test("status 400, if no body given", () => {
     return request(app)
       .patch("/api/reviews/4")
-      .send({
-    
-      })
+      .send({})
       .expect(400)
       .then(({ body }) => {
         expect(body.msg).toBe("bad request");
@@ -309,7 +307,7 @@ describe("PATCH /api/reviews/:review_id", () => {
       .patch("/api/reviews/4")
       .send({
         inc_votes: 1,
-        banana: 3
+        banana: 3,
       })
       .expect(200)
       .then(({ body }) => {
@@ -330,8 +328,7 @@ describe("PATCH /api/reviews/:review_id", () => {
   });
 });
 
-
-describe("GET /api/users", () =>{
+describe("GET /api/users", () => {
   test("status 200, returns all users", () => {
     return request(app)
       .get("/api/users")
@@ -342,9 +339,121 @@ describe("GET /api/users", () =>{
           expect(user).toMatchObject({
             username: expect.any(String),
             name: expect.any(String),
-            avatar_url : expect.any(String)
+            avatar_url: expect.any(String),
           });
         });
       });
   });
-})
+});
+
+describe("GET /api/reviews (queries)", () => {
+  test("status 200, if given a category query only returns result with that category and order by date", () => {
+    return request(app)
+      .get("/api/reviews?category=dexterity")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.reviews.length).toBe(1);
+        expect(body.reviews).toBeSortedBy("created_at", {
+          descending: true,
+        });
+        expect(body.reviews[0]).toMatchObject({
+          review_id: 2,
+          title: "Jenga",
+          category: "dexterity",
+          designer: "Leslie Scott",
+          owner: "philippaclaire9",
+          review_body: "Fiddly fun for all the family",
+          review_img_url:
+            "https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png",
+          created_at: expect.any(String),
+          votes: 5,
+          comment_count: 3,
+        });
+      });
+  });
+  test("status 200, if given no category returns all results", () => {
+    return request(app)
+      .get("/api/reviews")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.reviews.length).toBe(13);
+      });
+  });
+  test("status 404, if category doesn't exist", () => {
+    return request(app)
+      .get("/api/reviews?category=dexterity=banana")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("not found");
+      });
+  });
+  test("status 200, if category exists but not in review table", () => {
+    return request(app)
+      .get("/api/reviews?category=children's games")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.reviews.length).toBe(0);
+      });
+  });
+  test("status 200, if an order ASC by query is given sorts the list", () => {
+    return request(app)
+      .get("/api/reviews?order=ASC")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.reviews.length).toBe(13);
+        expect(body.reviews).toBeSortedBy("created_at", {
+          descending: false,
+        });
+      });
+  });
+  test("status 200, if a order DESC by query is given sorts the list", () => {
+    return request(app)
+      .get("/api/reviews?order=DESC")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.reviews.length).toBe(13);
+        expect(body.reviews).toBeSortedBy("created_at", {
+          descending: true,
+        });
+      });
+  });
+  test("status 400, if invalid order parameter given defaults to DESC", () => {
+    return request(app)
+      .get("/api/reviews?order=banana")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("invalid order");
+      });
+  });
+  test("status 200, if given a sort_by value", () => {
+    return request(app)
+      .get("/api/reviews?sort_by=title")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.reviews.length).toBe(13);
+        expect(body.reviews).toBeSortedBy("title", {
+          descending: true,
+        });
+      });
+  });
+  test("status 400,  invalid sort by ", () => {
+    return request(app)
+      .get("/api/reviews?sort_by=banana")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("invalid sort by");
+      });
+  });
+  test("status 200, a complex query with all three present works", () => {
+    return request(app)
+      .get("/api/reviews?category=social deduction&order=ASC&sort_by=title")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.reviews.length).toBe(11);
+        expect(body.reviews).toBeSortedBy("title", {
+          descending: false,
+        });
+      });
+  });
+
+});
