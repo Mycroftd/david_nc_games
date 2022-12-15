@@ -7,7 +7,7 @@ const {
   getAllReviews,
   getAllreviewComment,
   addComment,
-  getAllUsers,
+  selectAllUsers,
   patchReviewById,
   deleteComment
 } = require("./controllers/games.controller");
@@ -27,7 +27,7 @@ app.get("/api/reviews/:review_id/comments", getAllreviewComment);
 app.post("/api/reviews/:review_id/comments", addComment);
 app.patch("/api/reviews/:review_id", patchReviewById);
 
-app.get("/api/users", getAllUsers);
+app.get("/api/users", selectAllUsers);
 app.delete("/api/comments/:comment_id",deleteComment)
 
 

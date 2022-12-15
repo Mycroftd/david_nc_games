@@ -5,7 +5,7 @@ const {
   insertComment,
   selectUserNameById,
   selectreviewComment,
-  selectAllUsers,
+  getAllUsers,
   updateReviewsById,
   removeComment,
   getCategoryById,
@@ -132,7 +132,8 @@ exports.deleteComment  =(req,res,next) =>{
   
 }
 
-  exports.selectAllUsers(users) =(req,res,next) =>{
+  exports.selectAllUsers =(req,res,next) =>{
+    getAllUsers()
     .then((users) => {
       res.status(200).send({ users });
     })
