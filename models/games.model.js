@@ -119,7 +119,6 @@ exports.selectAllUsers = () => {
 
 };
 
-}
 
 exports.getCategoryById = (categoryId) =>{
   return db
