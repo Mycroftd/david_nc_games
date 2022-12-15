@@ -31,11 +31,31 @@ exports.getAllReviews = (req, res, next) => {
   let { category, order, sort_by } = req.query;
 
   const orderGreenList = ["DESC", "ASC"];
-  if (!orderGreenList.includes(order)) order = "DESC";
+  if (!order) {
+    order = "DESC";
+  } else if (!orderGreenList.includes(order)) {    
+    res.status(400).send({ msg: "invalid order" });
+    return;
+  }
 
-  const sortByGreenList = ["review_id","title", "category", "designer", "owner", "review_body","review_img_url","created_at","votes"];
-  if (!sortByGreenList.includes(sort_by)) sort_by = "created_at";
-
+  const sortByGreenList = [
+    "review_id",
+    "title",
+    "category",
+    "designer",
+    "owner",
+    "review_body",
+    "review_img_url",
+    "created_at",
+    "votes",
+  ];
+  if(!sort_by ){
+    sort_by = "created_at"
+  }
+  else if (!sortByGreenList.includes(sort_by)){
+    res.status(400).send({ msg: "invalid sort by" });
+    return;
+  }
   const promiseMethods = [selectAllReviews(category, order, sort_by)];
   if (category) {
     promiseMethods.push(getCategoryById(category));

@@ -417,15 +417,12 @@ describe("GET /api/reviews (queries)", () => {
         });
       });
   });
-  test("status 200, if invalid order parameter given defaults to DESC", () => {
+  test("status 400, if invalid order parameter given defaults to DESC", () => {
     return request(app)
       .get("/api/reviews?order=banana")
-      .expect(200)
+      .expect(400)
       .then(({ body }) => {
-        expect(body.reviews.length).toBe(13);
-        expect(body.reviews).toBeSortedBy("created_at", {
-          descending: true,
-        });
+        expect(body.msg).toBe("invalid order");
       });
   });
   test("status 200, if given a sort_by value", () => {
@@ -439,15 +436,12 @@ describe("GET /api/reviews (queries)", () => {
         });
       });
   });
-  test("status 200, ignores an invalid sort by ", () => {
+  test("status 400,  invalid sort by ", () => {
     return request(app)
       .get("/api/reviews?sort_by=banana")
-      .expect(200)
+      .expect(400)
       .then(({ body }) => {
-        expect(body.reviews.length).toBe(13);
-        expect(body.reviews).toBeSortedBy("created_at", {
-          descending: true,
-        });
+        expect(body.msg).toBe("invalid sort by");
       });
   });
   test("status 200, a complex query with all three present works", () => {
