@@ -8,7 +8,9 @@ const {
   getAllreviewComment,
   addComment,
   getAllUsers,
-  patchReviewById
+  patchReviewById,
+  endPoints
+
 } = require("./controllers/games.controller");
 const {
   catch404Error,
@@ -27,6 +29,8 @@ app.post("/api/reviews/:review_id/comments", addComment);
 app.patch("/api/reviews/:review_id", patchReviewById);
 
 app.get("/api/users", getAllUsers);
+
+app.get("/api", endPoints);
 
 
 app.all("*", catch404Error);

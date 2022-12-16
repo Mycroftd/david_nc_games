@@ -10,6 +10,8 @@ const {
   getCategoryById,
 } = require("../models/games.model");
 
+const allEndPointsJSON = require("../endpoints.json")
+
 exports.getAllCategories = (req, res, next) => {
   selectAllCategories().then((categories) => {
     res.status(200).send({ categories });
@@ -121,3 +123,7 @@ exports.getAllUsers = (req, res, next) => {
       next(err);
     });
 };
+
+exports.endPoints = (req, res, next) => {
+  res.json(allEndPointsJSON);
+}
