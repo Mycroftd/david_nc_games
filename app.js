@@ -7,7 +7,6 @@ const {
   getAllReviews,
   getAllreviewComment,
   addComment,
-  patchReviewById,
   endPoints,
   selectAllUsers,
   patchReviewById,
