@@ -127,3 +127,4 @@ exports.getAllUsers = (req, res, next) => {
 exports.endPoints = (req, res, next) => {
   res.json(allEndPointsJSON);
 }
+ 
