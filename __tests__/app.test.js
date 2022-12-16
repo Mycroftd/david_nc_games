@@ -478,6 +478,27 @@ describe("GET /api/reviews (queries)", () => {
 
 });
 
+describe("GET /api", () =>{
+  test("status 200, an object with all end points", () =>{
+    return request(app)
+    .get("/api")
+    .expect(200)
+    .then(({ body }) => {
+      console.log(body);
+      expect(body).toMatchObject({
+        "GET /api": expect.any(Object),
+        "GET /api/categories": expect.any(Object),
+        "GET /api/reviews": expect.any(Object),
+        "GET /api/reviews/:review_id": expect.any(Object),
+        "GET /api/reviews/:review_id/comments": expect.any(Object),
+        "POST /api/reviews/:review_id/comments": expect.any(Object),
+        "PATCH /api/reviews/:review_id": expect.any(Object),
+        "GET /api/users": expect.any(Object),
+        "DELETE /api/comments/:comment_id":expect.any(Object)
+      });
+    })
+  })
+})
 describe("DELETE /api/comments/:comment_id", () =>{
   test("status 204, if deleted and no contents" , () =>{
     return request(app)
