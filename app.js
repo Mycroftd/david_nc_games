@@ -7,6 +7,7 @@ const {
   getAllReviews,
   getAllreviewComment,
   addComment,
+  endPoints,
   selectAllUsers,
   patchReviewById,
   deleteComment
@@ -29,6 +30,8 @@ app.patch("/api/reviews/:review_id", patchReviewById);
 
 app.get("/api/users", selectAllUsers);
 app.delete("/api/comments/:comment_id",deleteComment)
+
+app.get("/api", endPoints);
 
 
 app.all("*", catch404Error);

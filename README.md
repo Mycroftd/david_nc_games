@@ -12,5 +12,8 @@ To clone the project go to the directory you wish to install on and then run:
 npm clone https://github.com/Mycroftd/david_nc_games.git
 once cloned run npm install to install dependencies
 To run the tests run npm testin the command line
+<<<<<<< HEAD
 
 This project was written with node version 18.11.0 and PostgreSQL version 14.5 
+=======
+>>>>>>> 1e4f98bc527cd06b7835e51add9033ea6c6aed98
