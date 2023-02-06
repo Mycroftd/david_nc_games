@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require('cors');
 const app = express();
 
 const {
@@ -19,6 +20,7 @@ const {
   customError,
 } = require("./controllers/errors.controller");
 
+app.use(cors());
 app.use(express.json());
 
 app.get("/api/categories", getAllCategories);
